@@ -1,1 +1,1 @@
-web: gunicorn application:app # type: ignore
+web: gunicorn application:app

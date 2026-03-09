@@ -1,10 +1,8 @@
+import os
 from flask import Flask, render_template_string, request, redirect, session, url_for
-from flask_session import Session
 
 app = Flask(__name__)
-app.secret_key = "secret123"
-app.config["SESSION_TYPE"] = "filesystem"
-Session(app)
+app.secret_key = os.environ.get("SECRET_KEY", "change-me-before-deploying")
 
 # In-memory storage
 users = {}  # username: password
@@ -1306,7 +1304,9 @@ def dashboard():
     progress = (completed / total * 100) if total > 0 else 0
     return render_template_string(dashboard_html, user=u, total=total, completed=completed, in_progress=in_progress, progress=progress)
 
+# WSGI alias required by AWS Elastic Beanstalk's default WSGI detection
+application = app
+
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
